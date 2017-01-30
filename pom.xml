@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.groupseven.sensorsim</groupId>
+	<artifactId>cleansweep</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>cleansweep</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<profiles>
+      <profile>
+        <id>everything</id>
+        <build>
+          <plugins>
+            <plugin>
+              <artifactId>maven-jar-plugin</artifactId>
+              <configuration>
+                <classifier>everything</classifier>
+                <includes>
+                  <include>**/*</include>
+                </includes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+      <profile>
+        <id>robot</id>
+        <build>
+          <plugins>
+            <plugin>
+              <artifactId>maven-jar-plugin</artifactId>
+              <configuration>
+              	<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.groupseven.sensorsim.GridLayout</mainClass>
+						</manifest>
+					</archive>
+                <classifier>robot</classifier>
+              	<excludes>
+                  <exclude>**/sensorsim/</exclude>
+                </excludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+      <profile>
+        <id>sensorsim</id>
+        <build>
+          <plugins>
+            <plugin>
+              <artifactId>maven-jar-plugin</artifactId>
+              <configuration>
+              	<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.groupseven.sensorsim.GridLayout</mainClass>
+						</manifest>
+				</archive>
+                <classifier>sensorsim</classifier>
+              	<excludes>
+                  <exclude>**/robot/</exclude>
+                </excludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.groupseven.sensorsim.GridLayout</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.groupseven.sensorsim.GridLayout</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<!-- Plugin allow the use of "mvn exec:java" command in command prompt 
+				to run application -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.5.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>com.groupseven.sensorsim.GridLayout</mainClass>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>ant-magic</id>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<property name="compile_classpath" refid="maven.compile.classpath" />
+								<ant antfile="${basedir}/build.xml">
+									<target name="testAll" />
+								</ant>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<reporting>
+		<plugins>
+
+			<!-- integrate maven-cobertura-plugin to project site -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<formats>
+						<format>html</format>
+						<format>xml</format>
+					</formats>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</reporting>
+</project>
